@@ -1,0 +1,28 @@
+﻿<Window x:Class="TrayIcon.MainWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TrayIcon"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="395.798" Width="184.875" WindowStyle="None">
+    <Grid>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" MinHeight="20" MinWidth="20">
+            <Button HorizontalAlignment="Right" Width="23" BorderBrush="{x:Null}" Name="ExitButton" Click="ExitButton_Click" Height="24">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/Close-icon.png" Stretch="UniformToFill"/>
+                </Button.Background>
+            </Button>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Margin="0,20,0,0">
+            <Label Margin="0,25,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Content="MouseTrackerUltimate" FontWeight="Bold" FontSize="15"></Label>
+            <ComboBox Name="ProfileBox">
+                <ComboBoxItem IsSelected="True">Profile 1</ComboBoxItem>
+                <ComboBoxItem >Profile 2</ComboBoxItem>
+                <ComboBoxItem >Profile 3</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+
+    </Grid>
+</Window>
