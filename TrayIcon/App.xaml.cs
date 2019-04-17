@@ -15,14 +15,7 @@ namespace TrayIcon {
     /// </summary>
     public partial class App : Application {
 
-        public const UInt32 SPI_SETMOUSESPEED = 0x0071;
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern Boolean SystemParametersInfo(
-            UInt32 uiAction,
-            UInt32 uiParam,
-            UInt32 pvParam,
-            UInt32 fWinIni);
+        
 
 
 
@@ -42,7 +35,7 @@ namespace TrayIcon {
             _notifyIcon.Icon = TrayIcon.Properties.Resources.Icon1;
             _notifyIcon.Visible = true;
 
-            SystemParametersInfo(SPI_SETMOUSESPEED, 0, 10, 0);
+            
 
 
             CreateContextMenu();
