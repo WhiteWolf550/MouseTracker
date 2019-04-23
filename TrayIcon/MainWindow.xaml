@@ -6,53 +6,65 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TrayIcon"
         mc:Ignorable="d"
-        Title="MainWindow" Height="406.798" Width="191.542" WindowStyle="None">
-    <Grid>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" MinHeight="20" MinWidth="20">
-            <Button HorizontalAlignment="Right" Width="23" BorderBrush="{x:Null}" Name="ExitButton" Click="ExitButton_Click" Height="24">
+        Title="MainWindow" Name="Main" Height="406.798" Width="200.542" WindowStyle="None" ResizeMode="NoResize" Icon="Resources/Icon1.ico" BorderBrush="#FFF44336" BorderThickness="1" Background="White">
+   
+        <Grid>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" MinHeight="20" MinWidth="20">
+            <Button HorizontalAlignment="Right" Width="23" BorderBrush="{x:Null}" Name="DarkModeButton" Click="DarkModeButton_Click" Height="24">
                 <Button.Background>
-                    <ImageBrush ImageSource="Resources/Close-icon.png" Stretch="UniformToFill"/>
+                    <ImageBrush x:Name="ModeImage" ImageSource="Resources/BlackMoon.ico" Stretch="UniformToFill"/>
                 </Button.Background>
             </Button>
-        </StackPanel>
-        <StackPanel Visibility="Visible" Orientation="Vertical" Margin="0,20,0,0">
-            <Label Margin="0,25,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Content="MouseTrackerUltimate" FontWeight="Bold" FontSize="15"></Label>
-            <ComboBox Margin="3" Name="ProfileBox">
-                <ComboBoxItem Name="DefaultItem" Content="Choose Profile" IsSelected="True"></ComboBoxItem>
-            </ComboBox>
-            <StackPanel Name="ProfilesPanel" Visibility="Visible">
-                <materialDesign:Card Margin="2,25,2,2">
-                    <StackPanel  Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <Label  Content="Speed of mouse cursor:" HorizontalAlignment="Left"></Label>
-                            <Label Name="MouseSpeedLabel" Content="6"></Label>
-                        </StackPanel>
-                        <Slider Value="10" Margin="5" Name="MouseSlider" ValueChanged="Slider_ValueChanged" Minimum="1" Maximum="20"></Slider>
-                    </StackPanel>
-                </materialDesign:Card>
-                <materialDesign:Card Margin="2,25,2,2">
-                    <StackPanel  Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <Label  Content="Speed of mouse scrolling:" HorizontalAlignment="Left"></Label>
-                            <Label Name="MouseScrollSpeedLabel" Content="6"></Label>
-                        </StackPanel>
-                        <Slider Margin="5" Value="3"  Name="ScrollSlider" ValueChanged="ScrollSlider_ValueChanged"  Minimum="1" Maximum="100"></Slider>
-                    </StackPanel>
-                </materialDesign:Card>
-                <materialDesign:Card Margin="2,25,2,2">
-                    <StackPanel  Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <Label  Content="DoubleClick Speed:" HorizontalAlignment="Left" Width="119"></Label>
-                            <Label HorizontalAlignment="Left" Name="MouseDoubleClickSpeedLabel" Content="6"></Label>
-                        </StackPanel>
-                        <Slider Margin="5" Value="500"  Name="DoubleClickSlider" ValueChanged="DoubleClickSlider_ValueChanged"  Minimum="1" Maximum="5000"></Slider>
-                    </StackPanel>
-                </materialDesign:Card>
-                <Button Name="SaveButton" Click="SaveButton_Click" Margin="8" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Save Profile" FontSize="11" Padding="5" MinWidth="60" MinHeight="20"></Button>
-            </StackPanel>
+            <Button HorizontalAlignment="Right" Width="23" BorderBrush="{x:Null}" Name="ExitButton" Click="ExitButton_Click" Height="24">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Resources/Close-icon.png" Stretch="UniformToFill"/>
+                    </Button.Background>
+                </Button>
             
         </StackPanel>
-        
+            <StackPanel Visibility="Visible" Orientation="Vertical" Margin="0,20,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <Label Margin="0,25,0,0" Name="Title" HorizontalAlignment="Center" VerticalAlignment="Top" Content="MouseTracker" FontWeight="Bold" FontSize="15"></Label>
+                    <Label Margin="0,25,0,0" Padding="0,5,5,5" HorizontalAlignment="Center" VerticalAlignment="Top" Content="ULTIMATE" FontWeight="Bold" FontSize="15" Foreground="#FFF44336"></Label>
+                </StackPanel>
+                <ComboBox Margin="3" Name="ProfileBox">
+                    <ComboBoxItem Tag="Default" Name="DefaultItem" Content="Choose Profile" IsSelected="True"></ComboBoxItem>
+                    <ComboBoxItem Tag="Default" Name="NewtItem" Content="Create new profile" Selected="SelectProfile"></ComboBoxItem>
+                </ComboBox>
+                <StackPanel Name="ProfilesPanel" Visibility="Visible">
+                    <materialDesign:Card Margin="2,25,2,2" Name="ProfileCard1">
+                        <StackPanel  Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Name="MSpeed"  Content="Speed of mouse cursor:" HorizontalAlignment="Left"></Label>
+                                <Label Name="MouseSpeedLabel" Content="6"></Label>
+                            </StackPanel>
+                            <Slider Value="10" Margin="5" Name="MouseSlider" ValueChanged="Slider_ValueChanged" Minimum="1" Maximum="20"></Slider>
+                        </StackPanel>
+                    </materialDesign:Card>
+                    <materialDesign:Card Margin="2,25,2,2" Name="ProfileCard2">
+                        <StackPanel  Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Name="SSpeed" Content="Speed of mouse scrolling:" HorizontalAlignment="Left"></Label>
+                                <Label Name="MouseScrollSpeedLabel" Content="6"></Label>
+                            </StackPanel>
+                            <Slider Margin="5" Value="3"  Name="ScrollSlider" ValueChanged="ScrollSlider_ValueChanged"  Minimum="1" Maximum="100"></Slider>
+                        </StackPanel>
+                    </materialDesign:Card>
+                    <materialDesign:Card Margin="2,25,2,2" Name="ProfileCard3">
+                        <StackPanel  Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Name="DSpeed" Content="DoubleClick Speed:" HorizontalAlignment="Left" Width="119"></Label>
+                                <Label HorizontalAlignment="Left" Name="MouseDoubleClickSpeedLabel" Content="6"></Label>
+                            </StackPanel>
+                            <Slider Margin="5" Value="500"  Name="DoubleClickSlider" ValueChanged="DoubleClickSlider_ValueChanged"  Minimum="1" Maximum="5000"></Slider>
+                        </StackPanel>
+                    </materialDesign:Card>
+                    <Button Name="SaveButton" Click="SaveButton_Click" Margin="8" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Save Profile" FontSize="11" Padding="5" MinWidth="60" MinHeight="20"></Button>
+                </StackPanel>
 
-    </Grid>
+            </StackPanel>
+
+
+        </Grid>
+   
 </Window>
