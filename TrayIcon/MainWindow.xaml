@@ -9,7 +9,8 @@
         Title="MainWindow" Name="Main" Height="406.798" Width="200.542" WindowStyle="None" ResizeMode="NoResize" Icon="Resources/Icon1.ico" BorderBrush="#FFF44336" BorderThickness="1" Background="White">
    
         <Grid>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" MinHeight="20" MinWidth="20">
+        
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" MinHeight="20" MinWidth="20">
             <Button HorizontalAlignment="Right" Width="23" BorderBrush="{x:Null}" Name="DarkModeButton" Click="DarkModeButton_Click" Height="24">
                 <Button.Background>
                     <ImageBrush x:Name="ModeImage" ImageSource="Resources/BlackMoon.ico" Stretch="UniformToFill"/>
@@ -27,11 +28,15 @@
                     <Label Margin="0,25,0,0" Name="Title" HorizontalAlignment="Center" VerticalAlignment="Top" Content="MouseTracker" FontWeight="Bold" FontSize="15"></Label>
                     <Label Margin="0,25,0,0" Padding="0,5,5,5" HorizontalAlignment="Center" VerticalAlignment="Top" Content="ULTIMATE" FontWeight="Bold" FontSize="15" Foreground="#FFF44336"></Label>
                 </StackPanel>
-                <ComboBox Margin="3" Name="ProfileBox">
+            <StackPanel Orientation="Horizontal">
+                <ComboBox Margin="3" Name="ProfileBox" Width="162">
                     <ComboBoxItem Tag="Default" Name="DefaultItem" Content="Choose Profile" IsSelected="True"></ComboBoxItem>
-                    <ComboBoxItem Tag="Default" Name="NewtItem" Content="Create new profile" Selected="SelectProfile"></ComboBoxItem>
+                    
                 </ComboBox>
-                <StackPanel Name="ProfilesPanel" Visibility="Visible">
+                <Button ToolTip="Create new Profile" Name="CreateNewProfileButton" Click="CreateNewProfileButton_Click" Content="+" FontSize="20" Margin="0" Padding="0" MinHeight="10" Width="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"></Button>
+            </StackPanel>
+
+            <StackPanel Name="ProfilesPanel" Visibility="Visible">
                     <materialDesign:Card Margin="2,25,2,2" Name="ProfileCard1">
                         <StackPanel  Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
@@ -59,12 +64,31 @@
                             <Slider Margin="5" Value="500"  Name="DoubleClickSlider" ValueChanged="DoubleClickSlider_ValueChanged"  Minimum="1" Maximum="5000"></Slider>
                         </StackPanel>
                     </materialDesign:Card>
-                    <Button Name="SaveButton" Click="SaveButton_Click" Margin="8" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Save Profile" FontSize="11" Padding="5" MinWidth="60" MinHeight="20"></Button>
+                    <StackPanel Orientation="Horizontal" Margin="7,0,6,0" HorizontalAlignment="Center">
+                        <Button Name="SaveButton" Click="SaveButton_Click" Margin="8" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Save Profile" FontSize="11" Padding="5" MinWidth="60" MinHeight="20"></Button>
+                        <Button Content="🗑️" Width="29" Padding="1" Name="DeleteButton" Click="DeleteButton_Click" ToolTip="Delete Current Profile"></Button>
+                    </StackPanel>
                 </StackPanel>
-
+                
             </StackPanel>
+        <Button Height="Auto" Background="Black" BorderBrush="{x:Null}" Foreground="{x:Null}" Name="HideBackground" Visibility="Hidden" Click="HideBackground_Click"  Opacity="0.795"/>
+        <materialDesign:Card Margin="10,150,10,0" Padding="10" Name="NewProfileCard" Visibility="Hidden">
+            <StackPanel Name="NewProfileBox" Orientation="Vertical" Visibility="Visible">
+                <Label Margin="5" Name="ProfileNameLabel" Content="Profile Name:"></Label>
+                <TextBox Margin="5" Name="NewProfileNameText" Text="ProfileName"></TextBox>
+                <Button Content="Create Profile" FontSize="11" Margin="5" Height="25" Width="100" Name="NewProfile" Click="NewProfile_Click"></Button>
+            </StackPanel>
+        </materialDesign:Card>
+        <materialDesign:Card Margin="10,150,10,0" Padding="10" Name="DeleteProfileCard" Visibility="Hidden">
+            <StackPanel Name="DeleteProfileBox" Orientation="Vertical" Visibility="Visible">
+                <TextBlock Margin="5" Name="DeleteProfileNameLabel" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" Text="Are you sure that you want to delete this profile?"></TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Delete" FontSize="11" Margin="5" Height="25" Width="65" Name="DeleteProfile" Click="DeleteProfile_Click"></Button>
+                    <Button Content="Cancel" FontSize="11" Margin="5" Height="25" Width="66" Name="CancelDeleteProfile" Click="CancelDeleteProfile_Click"></Button>
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:Card>
 
-
-        </Grid>
+    </Grid>
    
 </Window>

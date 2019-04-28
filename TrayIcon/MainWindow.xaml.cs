@@ -80,19 +80,16 @@ namespace TrayIcon {
             
             
         }
-        private void NewItemDialog() {
-            NewItemDialog inputDialog = new NewItemDialog("Profile Name:", "");
-            if (inputDialog.ShowDialog() == true) {
-                Profiler(inputDialog.Answer);
-            }    
-        }
+        
         private void Profiler(string name) {
             CreateNewProfile(name);
         }
         private void CreateNewProfile(string ProfileName) {
             profiles.Add(new MouseProfile(ProfileName, 10, 3, 500));
             manager.SaveProfiles(profiles);
-            
+            CreateNewItem(ProfileName);
+            ProfileBox.SelectedIndex = ProfileBox.Items.Count -1;
+            LoadMouseProfile(ProfileName);
 
 
 
@@ -102,6 +99,16 @@ namespace TrayIcon {
             item.Content = name;
             item.Selected += new RoutedEventHandler(SelectProfile);
             ProfileBox.Items.Add(item);
+            MessageBox.Show("Profile Created!");
+            NewProfileMenuVisibility(Visibility.Hidden);
+        }
+        private void NewProfileMenuVisibility(Visibility visibility) {
+            HideBackground.Visibility = visibility;
+            NewProfileCard.Visibility = visibility;
+        }
+        private void DeleteProfileMenuVisibility(Visibility visibility) {
+            HideBackground.Visibility = visibility;
+            DeleteProfileCard.Visibility = visibility;
         }
         private void CreateProfiles() {
             profiles.Add(new MouseProfile("Ultimate Profile", 20, 15, 2000));
@@ -111,16 +118,19 @@ namespace TrayIcon {
         }
         private void SelectProfile(object sender, RoutedEventArgs e) {
             ComboBoxItem button = (sender as ComboBoxItem);
+            ChangeProfile(button.Content.ToString());
+            
+        }
+        private void ChangeProfile(string name) {
+            
             ProfilesPanel.Visibility = Visibility.Visible;
             DefaultItem.IsEnabled = false;
-            if (button.Content.ToString() == "Create new profile") {
-                NewItemDialog();
-            }else {
-                LoadMouseProfile(button.Content.ToString());
+            if (name == "Choose Profile") {
+                ProfilesPanel.Visibility = Visibility.Hidden;
+            } else {
+                LoadMouseProfile(name);
             }
-            //LoadMouseProfile(button.Content.ToString());
         }
-
         private void ScrollSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             MouseScrollSpeedLabel.Content = Math.Round(ScrollSlider.Value);
             SystemParametersInfo(SPI_SETWHEELSCROLLLINES, Convert.ToUInt32(Math.Round(ScrollSlider.Value)), 0, 0);
@@ -170,6 +180,12 @@ namespace TrayIcon {
             MouseScrollSpeedLabel.Foreground = Brushes.WhiteSmoke;
             MouseDoubleClickSpeedLabel.Foreground = Brushes.WhiteSmoke;
             ProfileBox.Foreground = Brushes.WhiteSmoke;
+            NewProfileCard.Background = brush2;
+            ProfileNameLabel.Foreground = Brushes.WhiteSmoke;
+            NewProfileNameText.Foreground = Brushes.WhiteSmoke;
+            DeleteProfileCard.Background = brush2;
+            DeleteProfileNameLabel.Foreground = Brushes.WhiteSmoke;
+            
         }
         private void DefaultMode() {
             Title.Foreground = Brushes.Black;
@@ -184,6 +200,12 @@ namespace TrayIcon {
             MouseScrollSpeedLabel.Foreground = Brushes.Black;
             MouseDoubleClickSpeedLabel.Foreground = Brushes.Black;
             ProfileBox.Foreground = Brushes.Black;
+            NewProfileCard.Background = Brushes.White;
+            ProfileNameLabel.Foreground = Brushes.Black;
+            NewProfileNameText.Foreground = Brushes.Black;
+            DeleteProfileCard.Background = Brushes.White;
+            DeleteProfileNameLabel.Foreground = Brushes.Black;
+            
         }
 
         private void DarkModeButton_Click(object sender, RoutedEventArgs e) {
@@ -196,6 +218,55 @@ namespace TrayIcon {
                 isDark = false;
                 ModeImage.ImageSource = new BitmapImage(new Uri(@"../../Resources/BlackMoon.ico", UriKind.Relative));
             }
+        }
+
+        private void HideBackground_Click(object sender, RoutedEventArgs e) {
+            NewProfileMenuVisibility(Visibility.Hidden);
+            DeleteProfileMenuVisibility(Visibility.Hidden);
+        }
+
+        private void NewProfile_Click(object sender, RoutedEventArgs e) {
+            if (NewProfileNameText.Text != null) {
+                Profiler(NewProfileNameText.Text.ToString());
+            }
+        }
+
+        private void CreateNewProfileButton_Click(object sender, RoutedEventArgs e) {
+            NewProfileMenuVisibility(Visibility.Visible);
+        }
+
+        private void DeleteProfile_Click(object sender, RoutedEventArgs e) {
+            RemoveProfile();
+        }
+        private void RemoveProfile() {
+            string profilename = ProfileBox.Text;
+            foreach (MouseProfile profile in profiles) {
+                if (profile.Name == profilename) {
+                    profiles.Remove(profile);
+                    MessageBox.Show("Profile Removed!");
+                    DeleteProfileMenuVisibility(Visibility.Hidden);
+                    break;
+                }
+            }
+            RemoveItem(profilename);
+            manager.SaveProfiles(profiles);
+            
+        }
+        private void RemoveItem(string name) {
+            foreach(ComboBoxItem item in ProfileBox.Items) {
+                if (item.Content.ToString() == name) {
+                    ProfileBox.Items.Remove(item);
+                    break;
+                }
+            }
+            ChangeProfile("Choose Profile");
+        }
+        private void CancelDeleteProfile_Click(object sender, RoutedEventArgs e) {
+            DeleteProfileMenuVisibility(Visibility.Hidden);
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e) {
+            DeleteProfileMenuVisibility(Visibility.Visible);
         }
     }
 }
