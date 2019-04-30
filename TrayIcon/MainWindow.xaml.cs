@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +24,7 @@ namespace TrayIcon {
     public partial class MainWindow : Window {
         FileManager manager = new FileManager();
         List<MouseProfile> profiles = new List<MouseProfile>();
+        static private JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
         public bool isDark = false;
 
         public const UInt32 SPI_SETMOUSESPEED = 0x0071;
@@ -37,13 +40,22 @@ namespace TrayIcon {
         public MainWindow() {
             InitializeComponent();
             ProfilesPanel.Visibility = Visibility.Hidden;
-            //CreateProfiles();
             LoadProfiles();
+            Get();
             
+        }
+
+        public async void Get() {
+            HttpClient httpclient = new HttpClient();
+            var response = await httpclient.GetAsync("https://viskoro16.sps-prosek.cz/restapi/json.php");
+
+            string content = await response.Content.ReadAsStringAsync();
+            profiles = JsonConvert.DeserializeObject<List<MouseProfile>>(content, settings);
             
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e) {
+
             this.Close();
         }
 
@@ -75,6 +87,8 @@ namespace TrayIcon {
                         MouseSpeedLabel.Content = profile.MouseSpeed;
                         ScrollSlider.Value = profile.ScrollSpeed;
                         MouseScrollSpeedLabel.Content = profile.ScrollSpeed;
+                        MouseDoubleClickSpeedLabel.Content = profile.DoubleClickSpeed;
+                        DoubleClickSlider.Value = profile.DoubleClickSpeed;
                     }
                 }
             

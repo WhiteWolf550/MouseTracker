@@ -15,11 +15,20 @@ namespace TrayIcon {
     /// </summary>
     public partial class App : Application {
 
-        
 
 
 
 
+        public const UInt32 SPI_SETMOUSESPEED = 0x0071;
+        public const UInt32 SPI_SETWHEELSCROLLLINES = 0x0069;
+        public const UInt32 SPI_SETDOUBLECLICKTIME = 0x0020;
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern Boolean SystemParametersInfo(
+            UInt32 uiAction,
+            UInt32 uiParam,
+            UInt32 pvParam,
+            UInt32 fWinIni);
         private System.Windows.Forms.NotifyIcon _notifyIcon;
         private bool _isExit;
 
@@ -50,6 +59,9 @@ namespace TrayIcon {
         }
 
         private void ExitApplication() {
+            SystemParametersInfo(SPI_SETWHEELSCROLLLINES, 3, 0, 0);
+            SystemParametersInfo(SPI_SETDOUBLECLICKTIME, 500, 0, 0);
+            SystemParametersInfo(SPI_SETMOUSESPEED, 0, 10, 0);
             _isExit = true;
             MainWindow.Close();
             _notifyIcon.Dispose();
