@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -24,7 +25,7 @@ namespace TrayIcon {
     public partial class MainWindow : Window {
         FileManager manager = new FileManager();
         List<MouseProfile> profiles = new List<MouseProfile>();
-        static private JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+        
         public bool isDark = false;
 
         public const UInt32 SPI_SETMOUSESPEED = 0x0071;
@@ -40,19 +41,23 @@ namespace TrayIcon {
         public MainWindow() {
             InitializeComponent();
             ProfilesPanel.Visibility = Visibility.Hidden;
+
+            
             LoadProfiles();
-            Get();
+            
             
         }
-
-        public async void Get() {
-            HttpClient httpclient = new HttpClient();
-            var response = await httpclient.GetAsync("https://viskoro16.sps-prosek.cz/restapi/json.php");
-
-            string content = await response.Content.ReadAsStringAsync();
-            profiles = JsonConvert.DeserializeObject<List<MouseProfile>>(content, settings);
-            
+        bool Internet() {
+            try {
+                using (var client = new WebClient())
+                using (client.OpenRead("http://clients3.google.com/generate_204")) {
+                    return true;
+                }
+            } catch {
+                return false;
+            }
         }
+        
 
         private void ExitButton_Click(object sender, RoutedEventArgs e) {
 
@@ -64,11 +69,24 @@ namespace TrayIcon {
             SystemParametersInfo(SPI_SETMOUSESPEED, 0, Convert.ToUInt32(Math.Round(MouseSlider.Value)), 0);
 
         }
-        public void LoadProfiles() {
-            profiles = manager.LoadProfiles();
-            
-            
-            foreach(MouseProfile profile in profiles) {
+        public async void LoadJson() {
+            if (Internet() == true) {
+                profiles = await manager.LoadProfilesFromWeb();
+            } else {
+                profiles = manager.LoadProfiles();
+            }
+        }
+        public async void LoadProfiles() {
+
+            if (Internet() == true) {
+                profiles = await manager.LoadProfilesFromWeb();
+                
+            } else {
+                profiles = manager.LoadProfiles();
+                File.Copy(@"../../Data/Profiles.json", @"../../Data/Profiles2.json");
+            }
+
+            foreach (MouseProfile profile in profiles) {
                 ComboBoxItem item = new ComboBoxItem();
                 item.Content = profile.Name;
                 item.Selected += new RoutedEventHandler(SelectProfile);
@@ -100,7 +118,16 @@ namespace TrayIcon {
         }
         private void CreateNewProfile(string ProfileName) {
             profiles.Add(new MouseProfile(ProfileName, 10, 3, 500));
-            manager.SaveProfiles(profiles);
+            
+            if (Internet()) {
+
+                manager.SaveProfiles(profiles);
+                manager.SaveProfilesToWeb(ProfileName, 10, 3, 500);
+            } else {
+                manager.SaveProfiles2(profiles);
+                
+            }
+            
             CreateNewItem(ProfileName);
             ProfileBox.SelectedIndex = ProfileBox.Items.Count -1;
             LoadMouseProfile(ProfileName);
@@ -161,6 +188,13 @@ namespace TrayIcon {
         public void SaveProfile() {
             GetProfile();
             manager.SaveProfiles(profiles);
+            if (Internet() == true) {
+                manager.SaveProfiles(profiles);
+                manager.UpdateProfilesToWeb(ProfileBox.Text.ToString(), Int32.Parse(MouseSpeedLabel.Content.ToString()), Int32.Parse(MouseScrollSpeedLabel.Content.ToString()), Int32.Parse(MouseDoubleClickSpeedLabel.Content.ToString()));
+            }else {
+                manager.SaveProfiles2(profiles);
+            }
+            
             MessageBox.Show("Profile Saved!");
         }
         public void GetProfile() {
